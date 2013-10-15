@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		
+		<style type="text/css">
+			html, body{
+					height: 100%;
+					width: 100%;
+					margin: 0px 0px;
+					padding: 0px;
+					background-color:#2d40a1;
+			}
+			
+			#googleMap {
+					margin:5px auto;
+					width: 99%;
+					height: 99%;
+			}
+			
+
+			
+			button {
+				position: fixed;
+				top: 10px;
+				left: -2px;
+				z-index:10;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 19px;
+				color: #b0d1eb;
+				padding: 11px 20px;
+				border: 0px ;
+				background: -moz-linear-gradient(
+					top,
+					#2d40a1 0%,
+					#2d40a1);
+				background: -webkit-gradient(
+					linear, left top, left bottom, 
+					from(#2d40a1),
+					to(#2d40a1));
+				-moz-box-shadow:
+					3px 3px 3px rgba(000,000,000,0.5),
+					inset 17px 0px 19px rgba(18,33,107,1);
+				-webkit-box-shadow:
+					3px 3px 3px rgba(000,000,000,0.5),
+					inset 17px 0px 19px rgba(18,33,107,1);
+				box-shadow:
+					3px 3px 3px rgba(000,000,000,0.5),
+					inset 17px 0px 19px rgba(18,33,107,1);
+				text-shadow:
+					0px -1px 0px rgba(000,000,000,0),
+					0px 1px 0px rgba(255,255,255,0);
+}
+
+		</style>
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+		
+		<script type="text/javascript">
+		
+		/////////////////////////
+		  /////   CARTE   /////
+		/////////////////////////
+		
+		var googleMap;
+		var oldLat = null;
+		var oldLng = null;
+		
+		var centerpos = new google.maps.LatLng(49.196944, -0.415073);
+		var marker1pos = new google.maps.LatLng(49.196429, -0.413517);
+		
+		var MarkerCercles = {
+					url: 'img/cercles-03.png',
+					// This marker is 20 pixels wide by 32 pixels tall.
+					size: new google.maps.Size(78, 78),
+					// The origin for this image is 0,0.
+					origin: new google.maps.Point(0,0),
+					// The anchor for this image is the base of the flagpole at 0,32.
+					anchor: new google.maps.Point(39, 39)
+				};
+		
+		var MarkerCube = {
+					url: 'img/cercles-02.png',
+					// This marker is 20 pixels wide by 32 pixels tall.
+					size: new google.maps.Size(78, 78),
+					// The origin for this image is 0,0.
+					origin: new google.maps.Point(0,0),
+					// The anchor for this image is the base of the flagpole at 0,32.
+					anchor: new google.maps.Point(39, 39)
+				};
+		
+		$(function() {
+			if(navigator.geolocation) {
+				//initialise la map
+				googleMap = new google.maps.Map($("#googleMap").get(0), {
+					zoom: 17,
+					disableDefaultUI: true,
+					center: centerpos,
+					mapTypeId: google.maps.MapTypeId.ROADMAP 
+				});
+				
+				
+				
+				// Initialisation des markers
+				var marker1 = new google.maps.Marker({
+					position: marker1pos,
+					map: googleMap,
+					icon: MarkerCube,
+					//anchor: new google.maps.Point(32, 32)
+				});
+
+				
+				
+				
+				
+				
+				startLocalisation();	
+			} else {
+				alert('Votre navigateur ne supporte pas la géolocalisation HTML5');
+			}
+		});
+		
+		function startLocalisation() {
+			//active le GPS
+			var userPosition = navigator.geolocation.watchPosition(callbackSuccess, callbackError, {enableHighAccuracy: true});
+		}
+		
+		function callbackSuccess(position) {
+			//récupère la latitude et la longitude
+			var latitude = position.coords.latitude;
+			var longitude = position.coords.longitude;
+			
+			//trace un marqueur
+			var marker = new google.maps.Marker({
+					position: new google.maps.LatLng(latitude, longitude),
+					map: googleMap,
+					icon: MarkerCercles,
+					title: "Me",
+			});
+			
+			//centre la map aux coordonnées voulue
+				googleMap.panTo(new google.maps.LatLng(latitude, longitude));
+			
+			//trace une ligne entre lancienne position et la nouvelle
+			if(oldLat) {
+			
+				var lines = [
+						new google.maps.LatLng(oldLat, oldLng),
+						new google.maps.LatLng(latitude, longitude)
+				];
+				
+				//dessine les lignes
+				var line = new google.maps.Polyline({
+						path: lines,
+						strokeColor: "red",
+						strokeOpacity: 1.0,
+						strokeWeight: 3,
+						map: googleMap
+				});
+			}
+			
+			//actualise les anciennes positions
+			oldLat = latitude;
+			oldLng = longitude;
+		}
+		
+		function callbackError(error) {
+			switch(error.code) {
+				case error.UNKNOWN_ERROR:
+						alert("La géolocalisation a rencontré une erreur.");
+				break;
+				case error.PERMISSION_DENIED:
+						alert("L'utilisateur n'a pas voulu donner sa position.");
+				break;
+				case error.POSITION_UNAVAILABLE:
+						alert("Les coordonnées de l'utilisateur n'ont pas pu être trouvées.");
+				break;
+				case error.TIMEOUT:
+						alert("La géolocalisation prend trop de temps.");
+				break;
+			}
+		}
+		
+		function stopGeolocalisation(){
+			navigator.geolocation.clearWatch(userPosition);
+		}
+		
+		/////////////////////////
+		  /////  MARKERS  /////
+		/////////////////////////
+		// Création de l'icône
+		
+		
+		
+		
+		
+		
+		// Options de la fenêtre
+		var myWindowOptions = {
+			content:
+			'<h6>Cinéma Pathé Bellecour</h6>'+
+			'<p><a href="http://www.cinemasgaumontpathe.com/cinemas/cinema-pathe-lyon-bellecour/" title="Site officiel">Visiter le site officiel</a></p>'
+		};
+		 
+		// Création de la fenêtre
+		var myInfoWindow = new google.maps.InfoWindow(myWindowOptions);
+		 
+		// Affichage de la fenêtre au click sur le marker
+		google.maps.event.addListener(marker1, 'click', function() {
+			myInfoWindow.open(googleMap,marker1);
+		});
+		
+		
+		</script>
+	
+	</head>
+	
+	<body>
+		<div id="googleMap"></div>
+		<button onclick="stopGeolocalisation();">Arrêter la géolocalisation</button>
+		
+	</body>
+</html>
