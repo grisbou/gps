@@ -18,13 +18,43 @@
 					width: 99%;
 					height: 99%;
 			}
+			#cache{
+					position:fixed;
+					top: 0px;
+					left: 0px;
+					height: 100%;
+					width: 100%;
+					margin: 0px 0px;
+					padding: 0px;
+					background-color:#2d40a1;
+					opacity:0.3;
+					display: none;
+			}
+			
+			#info {
+					position:fixed;
+					top: 0px;
+					left: 0px;
+					height: 90%;
+					width: 100%;
+					//padding: 0 5%;
+					margin: 5% 0;
+					background-color:#2d40a1;
+
+				-moz-box-shadow:
+					0px 3px 3px rgba(000,000,000,0.5);
+					
+				-webkit-box-shadow:
+					0px 3px 3px rgba(000,000,000,0.5);
+					display: none;
+			}
 			
 
 			
 			button {
 				position: fixed;
 				top: 10px;
-				left: -2px;
+				left: -5px;
 				z-index:10;
 				font-family: Arial, Helvetica, sans-serif;
 				font-size: 19px;
@@ -65,8 +95,10 @@
 		/////////////////////////
 		
 		var googleMap;
+		var info= document.getElementById ("info");
 		var oldLat = null;
 		var oldLng = null;
+		var north = null;
 		
 		var centerpos = new google.maps.LatLng(49.196944, -0.415073);
 		var marker1pos = new google.maps.LatLng(49.196429, -0.413517);
@@ -81,7 +113,7 @@
 					anchor: new google.maps.Point(39, 39)
 				};
 		
-		var MarkerCube = {
+		var Marker4 = {
 					url: 'img/cercles-02.png',
 					// This marker is 20 pixels wide by 32 pixels tall.
 					size: new google.maps.Size(78, 78),
@@ -90,6 +122,8 @@
 					// The anchor for this image is the base of the flagpole at 0,32.
 					anchor: new google.maps.Point(39, 39)
 				};
+		
+		
 		
 		$(function() {
 			if(navigator.geolocation) {
@@ -107,12 +141,18 @@
 				var marker1 = new google.maps.Marker({
 					position: marker1pos,
 					map: googleMap,
-					icon: MarkerCube,
+					icon: Marker4,
 					//anchor: new google.maps.Point(32, 32)
 				});
 
 				
 				
+				// Event
+				google.maps.event.addListener(marker1, 'click', function() {
+					document.getElementById("cache").style.display="block";
+					document.getElementById("info").style.display="block";
+				});
+
 				
 				
 				
@@ -124,15 +164,16 @@
 		
 		function startLocalisation() {
 			//active le GPS
-			var userPosition = navigator.geolocation.watchPosition(callbackSuccess, callbackError, {enableHighAccuracy: true});
-		}
+			var userPosition = navigator.geolocation.watchPosition(callbackSuccess, callbackError, calculateArrowRotation, {enableHighAccuracy: true});
+			
+		};
 		
 		function callbackSuccess(position) {
 			//récupère la latitude et la longitude
 			var latitude = position.coords.latitude;
 			var longitude = position.coords.longitude;
 			
-			//trace un marqueur
+			//trace un marqueur pour ma position
 			var marker = new google.maps.Marker({
 					position: new google.maps.LatLng(latitude, longitude),
 					map: googleMap,
@@ -141,10 +182,19 @@
 			});
 			
 			//centre la map aux coordonnées voulue
-				googleMap.panTo(new google.maps.LatLng(latitude, longitude));
+			googleMap.panTo(new google.maps.LatLng(latitude, longitude));
+			
+			// Event listener
+			google.maps.event.addListener(googleMap, 'center_changed', function() {
+				// 3 seconds after the center of the map has changed, pan back to the
+				// marker.
+				window.setTimeout(function() {
+				  googleMap.panTo(marker.getPosition());
+				}, 3000);
+			});
 			
 			//trace une ligne entre lancienne position et la nouvelle
-			if(oldLat) {
+				if(oldLat) {
 			
 				var lines = [
 						new google.maps.LatLng(oldLat, oldLng),
@@ -160,11 +210,56 @@
 						map: googleMap
 				});
 			}
+			if (window.DeviceOrientationEvent) {
+				window.addEventListener("deviceorientation", function (e) {
+				
+				north = e.alpha;
+				  
+				})}
+			
+			
+			
 			
 			//actualise les anciennes positions
 			oldLat = latitude;
 			oldLng = longitude;
-		}
+			
+			calculateArrowRotation();
+		};
+	
+		///////////  compas  ///////////////////
+		function calculateArrowRotation() {
+            var arrowAngle = bearing(oldLat, oldLng, 49.196429, -0.413517);
+
+            var element = document.getElementById('arrow');
+            element.style['-webkit-transform'] = 'rotate(' + arrowAngle + 'deg)';
+        };
+		
+			//////  dirrection du prochain point
+			function bearing(lat1,lng1,lat2,lng2) {
+				var dLon = toRad(lng2-lng1);
+				lat1 = toRad(lat1);
+				lat2 = toRad(lat2);
+				var y = Math.sin(dLon) * Math.cos(lat2);
+				var x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+				var rad = Math.atan2(y, x);
+				var brng = toDeg(rad);
+				if (north == null) {
+					return (brng + 360) % 360;
+					}else {
+					return(brng +360 - north)% 360;
+					}
+				
+			};
+			 function toRad(deg) {
+             return deg * Math.PI / 180;
+			};
+
+			function toDeg(rad) {
+				return rad * 180 / Math.PI;
+			};
+		
+		/////////////////////////////////////////////////
 		
 		function callbackError(error) {
 			switch(error.code) {
@@ -181,36 +276,13 @@
 						alert("La géolocalisation prend trop de temps.");
 				break;
 			}
-		}
+		};
 		
 		function stopGeolocalisation(){
 			navigator.geolocation.clearWatch(userPosition);
-		}
-		
-		/////////////////////////
-		  /////  MARKERS  /////
-		/////////////////////////
-		// Création de l'icône
-		
-		
-		
-		
-		
-		
-		// Options de la fenêtre
-		var myWindowOptions = {
-			content:
-			'<h6>Cinéma Pathé Bellecour</h6>'+
-			'<p><a href="http://www.cinemasgaumontpathe.com/cinemas/cinema-pathe-lyon-bellecour/" title="Site officiel">Visiter le site officiel</a></p>'
 		};
-		 
-		// Création de la fenêtre
-		var myInfoWindow = new google.maps.InfoWindow(myWindowOptions);
-		 
-		// Affichage de la fenêtre au click sur le marker
-		google.maps.event.addListener(marker1, 'click', function() {
-			myInfoWindow.open(googleMap,marker1);
-		});
+		
+
 		
 		
 		</script>
@@ -220,6 +292,13 @@
 	<body>
 		<div id="googleMap"></div>
 		<button onclick="stopGeolocalisation();">Arrêter la géolocalisation</button>
+		<img id="arrow" src="img/arrow.png" style="position: absolute; top: 80px; left: 105px;">
+		<div id="cache"></div>
+		<div id="info">
+			<hr/>
+			<p></p>
+			<hr/>
+		</div>
 		
 	</body>
 </html>
