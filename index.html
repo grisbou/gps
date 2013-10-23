@@ -40,21 +40,21 @@
 					min-height: 100%;
 					margin: 0 auto;
 			}
-			
-			#cube {
+
+			#cible {
 					position:absolute;
-					top: 10%;
-					left:-10%;
+					top: 50%;		
 					z-index:10;
-					-webkit-transform-origin: 50% 50%;
-					-moz-transform-origin: 50% 50%;
-					-o-transform-origin: 50% 50%;
-					transform-origin: 50% 50%;
+					-webkit-transform-origin: center;
+					-moz-transform-origin: center;
+					-o-transform-origin: center;
+					transform-origin: center;
+					display: none;
 			}
 
 			
-			/////   info    /////
-			#cache{
+			/*   info    */
+			#fond {
 					position:absolute;
 					top: 0px;
 					left: 0px;
@@ -71,9 +71,9 @@
 					position:absolute;
 					top: 0px;
 					left: 0px;
-					height: 94%;
+					height: 85%;
 					width: 100%;
-					//padding: 0 5%;
+					padding: 1% 0;
 					margin: 3% 0;
 					background-color:#2d40a1;
 
@@ -117,7 +117,8 @@
 					-3px 3px 3px rgba(000,000,000,0.5),
 					inset -17px 0px 19px rgba(18,33,107,1);
 			}
-			#stop {
+			#hide {
+				display:none;
 				left: -5px;
 				float:left;
 				-moz-box-shadow:
@@ -133,8 +134,8 @@
 
 		</style>
 		
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.exp&sensor=true"></script>
 		
 		<script type="text/javascript">
 		
@@ -143,14 +144,15 @@
 		/////////////////////////
 		
 		var googleMap;
-		var contenu2 = document.getElementById("contenu2");
+		//var contenu2 = document.getElementById("contenu2");
 		var localStream;
-		var	video = document.getElementById("video");
+		
 		
 		var info= document.getElementById ("info");
 		var oldLat = null;
 		var oldLng = null;
-		var north = null;
+		var north = /*null*/ 0;
+		var gamma = /*null*/ 0;
 		
 		var centerpos = new google.maps.LatLng(49.196944, -0.415073);
 		var marker1pos = new google.maps.LatLng(49.196429, -0.413517);
@@ -201,9 +203,9 @@
 				
 				// Event
 				google.maps.event.addListener(marker1, 'click', function() {
-					document.getElementById("cache").style.display="block";
-					document.getElementById("info").style.display="block";
-					
+					document.getElementById("fond").style.display="block";
+					document.getElementById("info").style.display="block"; 
+					document.getElementById("hide").style.display="block";
 				});
 
 				
@@ -214,6 +216,9 @@
 				alert('Votre navigateur ne supporte pas la géolocalisation HTML5');
 			}
 		});
+		
+		
+		
 		
 		function startLocalisation() {
 			//active le GPS
@@ -269,7 +274,7 @@
 			}
 			function process(event) {
 				var north = event.alpha;
-			
+				var gamma = event.gamma;
 			}
 			
 			
@@ -284,14 +289,19 @@
 	
 		///////////  compas  ///////////////////
 		function calculateArrowRotation() {
-            var arrowAngle = bearing(oldLat, oldLng, 49.196877, -0.41408);
+            var arrowAngle = bearing(oldLat, oldLng, 49.196937, -0.413887);
 				
             var element = document.getElementById('arrow');
             element.style['-webkit-transform'] = 'rotate(' + arrowAngle + 'deg)';
 			
-			var element2 = document.getElementById('cube');
-            
-			element2.style['-webkit-transform'] = 'translate(' + arrowAngle + '%, 0px)';
+			if ((north < arrowAngle) && (arrowAngle < north + 180)) {
+				document.getElementById("cible").style.display="block";
+				var posRel = (arrowAngle - north) * 100 / 180;
+				alert (posRel);
+				document.getElementById("cible").style.left = posRel + "%";
+				
+			//element2.style['-webkit-transform'] = 'translate(' + arrowAngle + '%, 0px)';
+			}else document.getElementById("cible").style.display="none";
         };
 		
 			//////  dirrection du prochain point
@@ -303,12 +313,7 @@
 				var x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
 				var rad = Math.atan2(y, x);
 				var brng = toDeg(rad);
-				if (north == null) {
-					alert("Le compas ne fonctionne pas");
-					}else {
-					return((brng - north) *4  ) ;
-					}
-				
+				return((brng +360) %360 ) ;	
 			};
 			 function toRad(deg) {
              return deg * Math.PI / 180;
@@ -337,8 +342,10 @@
 			}
 		};
 		
-		function stopGeolocalisation(){
-			navigator.geolocation.clearWatch(userPosition);
+		function hide(){
+			document.getElementById("fond").style.display="none";
+			document.getElementById("info").style.display="none";
+			document.getElementById("hide").style.display="none";
 		};
 		
 		/////////////////////////
@@ -357,10 +364,8 @@
 				localStream.stop(); 
 				document.getElementById("contenu").style.display="block";
 				document.getElementById("contenu2").style.display="none";
-				
-			
-				
-			}
+
+			} 
 			
 		}
 		
@@ -401,7 +406,7 @@
 			<div id="googleMap"></div>
 			
 			<img id="arrow" src="img/arrow.png" style="position: absolute; top: 80px; left: 105px;">
-			<div id="cache"></div>
+			<div id="fond"></div>
 			<div id="info">
 				<hr/>
 				
@@ -409,10 +414,10 @@
 			</div>
 		</div>
 		<div id="contenu2">
-				<video id="video" autoplay></video>
-				<img id="cube" src="img/cube.png">
+			<video id="video" autoplay></video>
+			<img id="cible" src="img/cercles-02.png">
 		</div>
-		<button id="stop" onclick="stopGeolocalisation();">Arrêter la géolocalisation</button>
+		<button id="hide" onclick="hide();">info</button>
 		<button id="vue" onclick="camMap()">Vue réelle</button>
 	</body>
 </html>
