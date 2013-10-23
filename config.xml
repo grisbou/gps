@@ -21,13 +21,10 @@
         The "device" permission is required for the 'deviceready' event.
     -->
     <feature name="http://api.phonegap.com/1.0/device" />
-	<feature name="Camera">
-		<param name="android-package" value="org.apache.cordova.CameraLauncher" />
-	</feature>
-	<feature name="Compass">
-		<param name="android-package" value="org.apache.cordova.CompassListener" />
-	</feature>
 	<feature name="http://api.phonegap.com/1.0/geolocation"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+	<feature name="http://api.phonegap.com/1.0/camera"/>
+	
 	<feature name="http://maps.google.com/maps/api/js?v=3.exp&sensor=true"/>
 	<feature name="http://code.jquery.com/jquery-1.9.1.js"/>
 	
@@ -62,7 +59,7 @@
     -->
 
     <!-- Define app icon for each platform. -->
-    <icon src="icon.png" />
+    <icon src="icon.png" gap:role="default"/>
     <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:density="ldpi" />
     <icon src="res/icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:density="mdpi" />
     <icon src="res/icon/android/icon-72-hdpi.png"   gap:platform="android"    gap:density="hdpi" />
