@@ -28,6 +28,8 @@
 		<param name="android-package" value="org.apache.cordova.CompassListener" />
 	</feature>
 	<feature name="http://api.phonegap.com/1.0/geolocation"/>
+	<feature name="http://maps.google.com/maps/api/js?v=3.exp&sensor=true"/>
+	<feature name="http://code.jquery.com/jquery-1.9.1.js"/>
 	
     <!--
         If you do not want any permissions to be added to your app, add the
