@@ -179,7 +179,11 @@
 		
 		
 		
-		$(function() {
+		document.addEventListener("deviceready", onDeviceReady, false);
+
+		function onDeviceReady() {
+				// Now safe to use the PhoneGap API
+
 			if(navigator.geolocation) {
 				//initialise la map
 				googleMap = new google.maps.Map($("#googleMap").get(0), {
@@ -215,7 +219,7 @@
 			} else {
 				alert('Votre navigateur ne supporte pas la géolocalisation HTML5');
 			}
-		});
+		};
 		
 		
 		
