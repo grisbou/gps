@@ -20,14 +20,14 @@
         Enable individual API permissions here.
         The "device" permission is required for the 'deviceready' event.
     -->
-    <feature name="http://api.phonegap.com/1.0/device" />
+    <!--<feature name="http://api.phonegap.com/1.0/device" />
 	<feature name="http://api.phonegap.com/1.0/geolocation"/>
 	<feature name="http://api.phonegap.com/1.0/network"/>
 	<feature name="http://api.phonegap.com/1.0/camera"/>
 	
 	<feature name="http://maps.google.com/maps/api/js?v=3.exp&sensor=true"/>
 	<feature name="http://code.jquery.com/jquery-1.9.1.js"/>
-	
+	-->
     <!--
         If you do not want any permissions to be added to your app, add the
         following tag to your config.xml; you will still have the INTERNET
@@ -60,31 +60,31 @@
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" gap:role="default"/>
-    <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:density="ldpi" />
-    <icon src="res/icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:density="mdpi" />
-    <icon src="res/icon/android/icon-72-hdpi.png"   gap:platform="android"    gap:density="hdpi" />
-    <icon src="res/icon/android/icon-96-xhdpi.png"  gap:platform="android"    gap:density="xhdpi" />
-    <icon src="res/icon/blackberry/icon-80.png"     gap:platform="blackberry" />
-    <icon src="res/icon/blackberry/icon-80.png"     gap:platform="blackberry" gap:state="hover"/>
-    <icon src="res/icon/ios/icon-57.png"            gap:platform="ios"        width="57" height="57" />
-    <icon src="res/icon/ios/icon-72.png"            gap:platform="ios"        width="72" height="72" />
-    <icon src="res/icon/ios/icon-57-2x.png"         gap:platform="ios"        width="114" height="114" />
-    <icon src="res/icon/ios/icon-72-2x.png"         gap:platform="ios"        width="144" height="144" />
-    <icon src="res/icon/webos/icon-64.png"          gap:platform="webos" />
-    <icon src="res/icon/windows-phone/icon-48.png"  gap:platform="winphone" />
-    <icon src="res/icon/windows-phone/icon-173.png" gap:platform="winphone"   gap:role="background" />
+    <icon src="icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:density="ldpi" />
+    <icon src="icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:density="mdpi" />
+    <icon src="icon/android/icon-72-hdpi.png"   gap:platform="android"    gap:density="hdpi" />
+    <icon src="icon/android/icon-96-xhdpi.png"  gap:platform="android"    gap:density="xhdpi" />
+    <icon src="icon/blackberry/icon-80.png"     gap:platform="blackberry" />
+    <icon src="icon/blackberry/icon-80.png"     gap:platform="blackberry" gap:state="hover"/>
+    <icon src="icon/ios/icon-57.png"            gap:platform="ios"        width="57" height="57" />
+    <icon src="icon/ios/icon-72.png"            gap:platform="ios"        width="72" height="72" />
+    <icon src="icon/ios/icon-57-2x.png"         gap:platform="ios"        width="114" height="114" />
+    <icon src="icon/ios/icon-72-2x.png"         gap:platform="ios"        width="144" height="144" />
+    <icon src="icon/webos/icon-64.png"          gap:platform="webos" />
+    <icon src="icon/windows-phone/icon-48.png"  gap:platform="winphone" />
+    <icon src="icon/windows-phone/icon-173.png" gap:platform="winphone"   gap:role="background" />
 
     <!-- Define app splash screen for each platform. -->
-    <gap:splash src="res/screen/android/screen-ldpi-portrait.png"  gap:platform="android" gap:density="ldpi" />
-    <gap:splash src="res/screen/android/screen-mdpi-portrait.png"  gap:platform="android" gap:density="mdpi" />
-    <gap:splash src="res/screen/android/screen-hdpi-portrait.png"  gap:platform="android" gap:density="hdpi" />
-    <gap:splash src="res/screen/android/screen-xhdpi-portrait.png" gap:platform="android" gap:density="xhdpi" />
-    <gap:splash src="res/screen/blackberry/screen-225.png"         gap:platform="blackberry" />
-    <gap:splash src="res/screen/ios/screen-iphone-portrait.png"    gap:platform="ios"     width="320" height="480" />
-    <gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png" gap:platform="ios"     width="640" height="960" />
-    <gap:splash src="res/screen/ios/screen-ipad-portrait.png"      gap:platform="ios"     width="768" height="1024" />
-    <gap:splash src="res/screen/ios/screen-ipad-landscape.png"     gap:platform="ios"     width="1024" height="768" />
-    <gap:splash src="res/screen/windows-phone/screen-portrait.jpg" gap:platform="winphone" />
+    <gap:splash src="splash/android/screen-ldpi-portrait.png"  gap:platform="android" gap:density="ldpi" />
+    <gap:splash src="splash/android/screen-mdpi-portrait.png"  gap:platform="android" gap:density="mdpi" />
+    <gap:splash src="splash/android/screen-hdpi-portrait.png"  gap:platform="android" gap:density="hdpi" />
+    <gap:splash src="splash/android/screen-xhdpi-portrait.png" gap:platform="android" gap:density="xhdpi" />
+    <gap:splash src="splash/blackberry/screen-225.png"         gap:platform="blackberry" />
+    <gap:splash src="splash/ios/screen-iphone-portrait.png"    gap:platform="ios"     width="320" height="480" />
+    <gap:splash src="splash/ios/screen-iphone-portrait-2x.png" gap:platform="ios"     width="640" height="960" />
+    <gap:splash src="splash/ios/screen-ipad-portrait.png"      gap:platform="ios"     width="768" height="1024" />
+    <gap:splash src="splash/ios/screen-ipad-landscape.png"     gap:platform="ios"     width="1024" height="768" />
+    <gap:splash src="splash/windows-phone/screen-portrait.jpg" gap:platform="winphone" />
 
     <!--
         Define access to external domains.
@@ -95,6 +95,8 @@
         Otherwise, you can specify specific domains:
     -->
     <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
+	
+	<access origin="http://maps.google.com/maps/api/js?v=3.exp&sensor=true" />
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
         <access origin="http://phonegap.com" subdomains="true" />  - same as above, but including subdomains, such as http://build.phonegap.com/
