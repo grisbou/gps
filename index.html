@@ -180,10 +180,10 @@
 		
 		
 		
-		document.addEventListener("deviceready", onDeviceReady, false);
+		
 
-		function onDeviceReady() {
-				// Now safe to use the PhoneGap API
+		$(function(){
+				
 
 			if(navigator.geolocation) {
 				//initialise la map
@@ -220,7 +220,7 @@
 			} else {
 				alert('Votre navigateur ne supporte pas la géolocalisation HTML5');
 			}
-		};
+		});
 		
 		
 		
@@ -236,6 +236,10 @@
 			var latitude = position.coords.latitude;
 			var longitude = position.coords.longitude;
 			var heading = position.coords.heading;
+<<<<<<< HEAD
+=======
+			
+>>>>>>> test14
 			//var altitude = position.coords.altitude;
 			
 			//trace un marqueur pour ma position
@@ -295,7 +299,7 @@
 			calculateArrowRotation();
 		};
 	
-		///////////  compas  ///////////////////
+		///////////  compas  ///////////////
 		function calculateArrowRotation() {
             var arrowAngle = bearing(oldLat, oldLng, 49.196937, -0.413887);
 				
