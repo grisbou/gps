@@ -232,9 +232,11 @@
 		};
 		
 		function callbackSuccess(position) {
-			//récupère la latitude et la longitude
+			//récupère la latitude, la longitude, l'angle par rapport au nord
 			var latitude = position.coords.latitude;
 			var longitude = position.coords.longitude;
+			var heading = position.coords.heading;
+			//var altitude = position.coords.altitude;
 			
 			//trace un marqueur pour ma position
 			var marker = new google.maps.Marker({
@@ -278,7 +280,7 @@
 				window.addEventListener("deviceorientation", process, true);
 			}
 			function process(event) {
-				var north = event.alpha;
+				//var north = event.alpha;
 				var gamma = event.gamma;
 			}
 			
@@ -288,6 +290,7 @@
 			//actualise les anciennes positions
 			oldLat = latitude;
 			oldLng = longitude;
+			north = heading;
 			
 			calculateArrowRotation();
 		};
@@ -302,7 +305,7 @@
 			if ((north < arrowAngle) && (arrowAngle < north + 180)) {
 				document.getElementById("cible").style.display="block";
 				var posRel = (arrowAngle - north) * 100 / 180;
-				alert (posRel);
+				
 				document.getElementById("cible").style.left = posRel + "%";
 				
 			//element2.style['-webkit-transform'] = 'translate(' + arrowAngle + '%, 0px)';
